@@ -90,9 +90,9 @@ function Contact() {
             <div>
               <h4>Call Us</h4>
               <p>
-                Phone: (703) 398-9915
+                Phone: <a href="tel:+17033989915">(703) 398-9915</a>
                 <br />
-                Text: (703) 398-9915
+                Text: <a href="sms:+17033989915">(703) 398-9915</a>
               </p>
             </div>
           </div>
@@ -102,9 +102,13 @@ function Contact() {
             <div>
               <h4>Email Us</h4>
               <p>
-                woldeteketel@gmail.com
+                <a href="mailto:woldeteketel@gmail.com">
+                  woldeteketel@gmail.com
+                </a>
                 <br />
-                desalegnteke@gmail.com
+                <a href="mailto:desalegnteke@gmail.com">
+                  desalegnteke@gmail.com
+                </a>
               </p>
             </div>
           </div>
