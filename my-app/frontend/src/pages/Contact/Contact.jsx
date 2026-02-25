@@ -2,10 +2,57 @@ import React, { useState } from "react";
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const initialState = {
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    contactSubject: "",
+    contactMessage: "",
+  };
+
+  const [formData, setFormData] = useState(initialState);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.contactName,
+          email: formData.contactEmail,
+          phone: formData.contactPhone,
+          subject: formData.contactSubject,
+          message: formData.contactMessage,
+        }),
+      });
+
+      if (response.ok) {
+        setSent(true);
+        setFormData(initialState); // ✅ clear form
+        setTimeout(() => setSent(false), 4000); // ✅ hide message after 4s
+      } else {
+        alert("Something went wrong");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -19,15 +66,22 @@ function Contact() {
 
       <div className="contact-grid">
         <div className="contact-info">
+          {/* Your contact info stays exactly the same */}
           <div className="contact-item">
             <div className="contact-icon">📍</div>
             <div>
               <h4>Visit Us</h4>
-              <p>
-                307 S Reynolds Street
-                <br />
-                Alexandria, VA 22304
-              </p>
+              <div style={{ marginTop: "10px" }}>
+                <iframe
+                  title="Wolde Driving School Location"
+                  src="https://www.google.com/maps?q=307+S+Reynolds+St+Alexandria+VA+22304&output=embed"
+                  width="100%"
+                  height="100"
+                  style={{ border: 0, borderRadius: "8px" }}
+                  allowFullScreen=""
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
           </div>
 
@@ -68,43 +122,78 @@ function Contact() {
         </div>
 
         <div className="form-container1">
-          {!sent ? (
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="contactName">Name *</label>
-                <input type="text" id="contactName" required />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contactEmail">Email *</label>
-                <input type="email" id="contactEmail" required />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contactPhone">Phone</label>
-                <input type="tel" id="contactPhone" />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contactSubject">Subject *</label>
-                <input type="text" id="contactSubject" required />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contactMessage">Message *</label>
-                <textarea id="contactMessage" required />
-              </div>
-
-              <button type="submit" className="submit-btn">
-                Send Message
-              </button>
-            </form>
-          ) : (
+          {/* ✅ Success message above form */}
+          {sent && (
             <div className="success-message">
               <h3>📬 Message Sent!</h3>
               <p>Thank you for contacting us. We'll respond within 24 hours.</p>
             </div>
           )}
+
+          {/* ✅ Form always visible */}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="contactName">Name *</label>
+              <input
+                type="text"
+                id="contactName"
+                name="contactName"
+                required
+                value={formData.contactName}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contactEmail">Email *</label>
+              <input
+                type="email"
+                id="contactEmail"
+                name="contactEmail"
+                required
+                value={formData.contactEmail}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contactPhone">Phone</label>
+              <input
+                type="tel"
+                id="contactPhone"
+                name="contactPhone"
+                value={formData.contactPhone}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contactSubject">Subject *</label>
+              <input
+                type="text"
+                id="contactSubject"
+                name="contactSubject"
+                required
+                value={formData.contactSubject}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contactMessage">Message *</label>
+              <textarea
+                id="contactMessage"
+                name="contactMessage"
+                required
+                value={formData.contactMessage}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? "Sending..." : "Send Message"}
+            </button>
+          </form>
         </div>
       </div>
     </section>

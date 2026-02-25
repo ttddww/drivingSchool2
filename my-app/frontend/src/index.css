@@ -642,7 +642,7 @@ textarea {
   max-width: 800px;
   margin: 0 40px;
   background: var(--white);
-  padding: 4.5rem;
+  padding: 6rem;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
